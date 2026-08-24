@@ -1,58 +1,64 @@
-# devops-fase1-projeto
-1.a) Descrição do Projeto, Objetivos e Requisitos
+# 🚀 Projeto DevOps - Fase 1: CI & IaC Pipeline
 
-Descrição: Implementação de uma esteira inicial de cultura e automação DevOps para um microserviço, utilizando práticas de Integração Contínua (CI) e Infraestrutura como Código (IaC).
+Repositório acadêmico voltado à implementação de uma esteira automatizada de **Integração Contínua (CI)** e provisionamento de **Infraestrutura como Código (IaC)**, garantindo entregas consistentes, testes automatizados e ambientes reproduzíveis.
 
-Objetivos:
+---
 
-Eliminar o provisionamento manual de servidores (ClickOps).
+## 📌 1.a) Descrição do Projeto, Objetivos e Requisitos
 
-Garantir a integridade do código através de testes automatizados a cada commit.
+### Descrição
+Implementação de uma esteira de automação DevOps para um microsserviço Python, integrando validação contínua de software via **GitHub Actions** e gerenciamento declarativo de infraestrutura em nuvem via **Terraform**.
 
-Garantir ambientes reproduzíveis e padronizados utilizando infraestrutura declarativa.
+### Objetivos
+* **Eliminar o Provisionamento Manual (Anti-ClickOps):** Automatizar a criação e validação de recursos em nuvem.
+* **Garantia de Qualidade de Software:** Executar suítes de testes unitários automatizados a cada alteração no código.
+* **Padronização e Reprodutibilidade:** Garantir ambientes de infraestrutura idênticos, auditáveis e versionados via código.
 
-Requisitos:
+### Requisitos Técnicos
+* **Controle de Versão:** Repositório Git estruturado com versionamento semântico.
+* **Pipeline de CI:** Execução automatizada de testes e checagem estática em nuvem (*GitHub Actions*).
+* **Validação de IaC:** Verificação sintática e de boas práticas de scripts HCL com *Terraform*.
+* **Infraestrutura AWS:** Definição de recursos gerenciados via Terraform no ecossistema AWS Free Tier.
 
-Repositório Git com branch principal protegida.
+---
 
-Testes unitários automatizados executados na nuvem.
+## 🔄 1.b) Plano de Integração Contínua (CI)
 
-Validação sintática e estrutural dos scripts de infraestrutura.
+### Estratégia de Branching (GitFlow Simplificado)
+* `main`: Ramo estável, protegido e pronto para produção/homologação.
+* `feature/*`: Ramos temporários destinados ao desenvolvimento isolado de novas funcionalidades e correções.
 
-Script IaC para criação de instância EC2 e Security Group na AWS.
+### Gatilhos da Esteira (Triggers)
+A pipeline de CI é acionada automaticamente nos seguintes eventos:
+* `push` direcionado às branches `main` e `feature/*`.
+* `pull_request` aberto contra a branch `main`.
 
-1.b) Plano de Integração Contínua (CI)
+### Barreiras de Qualidade (Quality Gates)
+O merge e a aprovação de builds são bloqueados caso ocorra:
+1. **Falha na suíte de testes:** Qualquer asserção quebrada na execução do `pytest`.
+2. **Inconformidade de IaC:** Erros de sintaxe ou formatação detectados pelo `terraform fmt -check`.
+3. **Erros de Dependências:** Incompatibilidades durante a resolução do `requirements.txt`.
 
-Estratégia de Branching: GitFlow Simplificado.
+---
 
-Branch main: Código estável e validado.
+## ☁️ 1.c) Especificação da Infraestrutura
 
-Branches feature/*: Desenvolvimento de novas funcionalidades.
+* **Provedor Cloud:** Amazon Web Services (AWS) — Camada Gratuita (*Free Tier*).
+* **Região Principal:** `us-east-1` (Norte da Virgínia).
 
-Gatilhos (Triggers): A esteira de CI roda automaticamente em:
+| Recurso | Tipo / Detalhe | Finalidade |
+| :--- | :--- | :--- |
+| **Compute (EC2)** | `t2.micro` (Ubuntu Server 22.04 LTS) | Hospedagem da aplicação/microsserviço |
+| **Rede (VPC)** | Default VPC com Subnet Pública | Roteamento e conectividade externa |
+| **Segurança (SG)** | Ingress: 22 (SSH), 80 (HTTP), 443 (HTTPS) | Controle de acesso ao tráfego de rede |
+| **Armazenamento de Estado** | AWS S3 Bucket | Armazenamento seguro do estado remoto (`.tfstate`) |
 
-Todo push realizado na branch main ou feature/*.
+---
 
-Abertura de qualquer pull_request direcionado à main.
+## 🛠️ Tecnologias Utilizadas
 
-Quality Gates (Barreiras de Qualidade): O merge para a branch main é bloqueado se:
-
-Qualquer teste unitário falhar.
-
-O linter apontar erros de padronização de código.
-
-Os scripts do Terraform possuírem erros de sintaxe ou formatação.
-
-1.c) Especificação da Infraestrutura Necessária
-
-Provedor Cloud: AWS (Amazon Web Services) - Camada Gratuita (Free Tier).
-
-Serviços:
-
-EC2: 1x Instância t2.micro rodando Ubuntu Server 22.04 LTS.
-
-VPC e Subnet: VPC padrão com suporte a IP Público.
-
-Security Group: Liberação das portas 22 (SSH - apenas manutenção), 80 (HTTP) e 443 (HTTPS).
-
-Armazenamento de Estado: AWS S3 Bucket para armazenamento remoto do arquivo de estado (.tfstate).
+* **Linguagem:** Python 3.11
+* **Testes Automatizados:** PyTest
+* **CI/CD:** GitHub Actions
+* **IaC:** HashiCorp Terraform
+* **Cloud:** AWS (EC2, S3, VPC, Security Group)
