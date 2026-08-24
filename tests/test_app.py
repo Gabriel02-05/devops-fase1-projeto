@@ -1,7 +1,6 @@
 import sys
 import os
 
-# Adiciona a pasta raiz ao path do Python para encontrar o modulo src
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.app import soma, status

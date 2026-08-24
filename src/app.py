@@ -1,14 +1,8 @@
-from flask import Flask, jsonify
+def soma(a: int, b: int) -> int:
+    return a + b
 
-app = Flask(__name__)
+def status() -> dict:
+    return {"status": "online", "ambiente": "dev"}
 
-@app.route('/')
-def home():
-    return jsonify({"status": "sucesso", "mensagem": "Aplicação DevOps rodando com sucesso!"})
-
-@app.route('/health')
-def health():
-    return jsonify({"status": "healthy"}), 200
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    print(f"Status da Aplicação: {status()}")
