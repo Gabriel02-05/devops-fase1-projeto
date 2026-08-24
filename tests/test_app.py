@@ -1,24 +1,16 @@
-import pytest
-from src.app import app
+import sys
+import os
 
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    with app.test_client() as client:
-        yield client
+# Adiciona a pasta raiz ao path do Python para encontrar o modulo src
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-def test_home_status_code(client):
-    """Testa se a rota principal responde HTTP 200"""
-    response = client.get('/')
-    assert response.status_code == 200
+from src.app import soma, status
 
-def test_home_content(client):
-    """Testa se a mensagem de retorno está correta"""
-    response = client.get('/')
-    data = response.get_json()
-    assert data['status'] == "sucesso"
+def test_soma():
+    assert soma(2, 3) == 5
+    assert soma(-1, 1) == 0
 
-def test_health_check(client):
-    """Testa o endpoint de verificação de saúde da aplicação"""
-    response = client.get('/health')
-    assert response.status_code == 200
+def test_status():
+    resultado = status()
+    assert resultado["status"] == "online"
+    assert resultado["ambiente"] == "dev"
